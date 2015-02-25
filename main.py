@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from functools import partial
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
+import argparse
 import os
 import shutil
-import sys
 import time
 
 
@@ -25,10 +26,43 @@ class Eu4SaveGameEventHandler(PatternMatchingEventHandler):
             self._handler(src)
 
 
+def directory(item):
+    if not os.path.exists(item):
+        raise ValueError('Error: {} does not exist'.format(item))
+    if not os.path.isdir(item):
+        raise ValueError('Error: {} is not a directory'.format(item))
+    return item
+
+
+def filepattern(item):
+    if not item.startswith('*'):
+        item = '*{}'.format(item)
+    return item
+
+
+def parseArguments():
+    parser = argparse.ArgumentParser(
+        description=u'Synchronyzes Europa Universalis 4™ multiplayer savegames '
+        u'in local directories using the DropBox™')
+    parser.add_argument(
+        'source', metavar='SOURCE', type=directory,
+        help='the source directory to monitorize')
+    parser.add_argument(
+        'destination', metavar='DESTINATION', type=directory,
+        help='the directory in which savegames should be copied')
+    parser.add_argument(
+        'patterns', nargs='+', metavar='PATTERN', type=filepattern,
+        help='file patterns to be monitored (ie. shared_*.eu4)')
+
+    args = parser.parse_args()
+    return args
+
+
 def main():
-    # FIXME: add proper option parsing
-    src, dst = map(partial(os.path.join, os.getcwd()), sys.argv[1:3])
-    patterns = map('*{}'.format, sys.argv[3:])
+    args = parseArguments()
+
+    src, dst = args.source, args.destination
+    patterns = args.patterns
 
     event_handler = Eu4SaveGameEventHandler(
         partial(shutil.copy2, dst=dst), patterns=patterns)
