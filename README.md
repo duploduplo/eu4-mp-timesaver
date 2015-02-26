@@ -11,7 +11,12 @@ Note that apparently without any reason Europa Universalis 4™ upload the expan
 
 Both the host and the clients have to use the fucking-time-saver.py script. The host will specify his savegame folder as the source and the DropBox™ shared folder as the destination. The clients will specify the DropBox™ shared folder as the source and the savegame folder as the destination.
 
-Host and clients have to choose a pattern to use for the savegame file names: good examples are *shared_\*.eu4* and *autosave\*.eu4* that will share all the savegames with *shared_* as the first part of the name and all the autosaves.
+Host and clients have to choose a pattern to use for the savegame file names. Good examples are:
+
+    shared_*.eu4
+    autosave*.eu4
+
+Using those patterns the fucking-time-saver will share all the savegames with *shared_* as the first part of the name and all the *autosaves*.
 
 Usage
 -----
