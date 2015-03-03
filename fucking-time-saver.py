@@ -7,7 +7,15 @@ from watchdog.observers import Observer
 import argparse
 import os
 import shutil
+import subprocess
+import sys
 import time
+
+
+def notify():
+    # Voice notification on OSX
+    if sys.platform == 'darwin':
+        subprocess.call(['say', '-v', 'Vicki', 'A new savegame is available'])
 
 
 class Eu4SaveGameEventHandler(PatternMatchingEventHandler):
@@ -64,8 +72,11 @@ def main():
     src, dst = args.source, args.destination
     patterns = args.patterns
 
-    event_handler = Eu4SaveGameEventHandler(
-        partial(shutil.copy2, dst=dst), patterns=patterns)
+    def handler(src):
+        partial(shutil.copy2, dst=dst)(src)
+        notify()
+
+    event_handler = Eu4SaveGameEventHandler(handler, patterns=patterns)
 
     observer = Observer()
     observer.schedule(event_handler, src, recursive=True)
