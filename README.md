@@ -34,6 +34,10 @@ Usage
     optional arguments:
       -h, --help   show this help message and exit
 
+Extras:
+-------
+ * On OSX, a voice will gently say when a new savegame is available
+
 TODO:
 -----
  * Add decent usage documentation
